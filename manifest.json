@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "Sample Plugin",
+	"id": "obsidian-jira-graph",
+	"name": "Jira Dependency Graph",
 	"version": "1.0.1",
 	"minAppVersion": "0.12.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
+	"description": "This plugin allows you to visualize the Atlassian Jira issues dependencies from your Obsidian notes.",
+	"author": "marc0l92",
+	"authorUrl": "https://github.com/marc0l92",
 	"isDesktopOnly": false
 }

@@ -1,15 +1,20 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "obsidian-jira-graph",
 	"version": "1.0.1",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "This plugin allows you to visualize the Atlassian Jira issues dependencies from your Obsidian notes.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"obsidian",
+		"Jira",
+		"Atlassian",
+		"dependencies"
+	],
+	"author": "marc0l92",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^16.11.6",

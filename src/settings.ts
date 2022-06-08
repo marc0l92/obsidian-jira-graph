@@ -1,6 +1,5 @@
 import { App, PluginSettingTab, Setting } from 'obsidian'
-import { IJiraAutocompleteDataField } from './client/jiraInterfaces'
-import JiraIssuePlugin from './main'
+import JiraGraphPlugin from './main'
 
 export enum EAuthenticationTypes {
     OPEN = 'OPEN',
@@ -13,9 +12,6 @@ const AUTHENTICATION_TYPE_DESCRIPTION = {
     [EAuthenticationTypes.BEARER_TOKEN]: 'Bearer Token',
 }
 
-export const COMPACT_SYMBOL = '-'
-export const COMMENT_REGEX = /^\s*#/
-
 export interface IJiraIssueSettings {
     host: string
     authenticationType: EAuthenticationTypes
@@ -24,19 +20,8 @@ export interface IJiraIssueSettings {
     bareToken?: string
     apiBasePath: string
     cacheTime: string
-    searchResultsLimit: number
     statusColorCache: Record<string, string>
-    customFieldsIdToName: Record<string, string>
-    customFieldsNameToId: Record<string, string>
-    jqlAutocomplete: {
-        fields: IJiraAutocompleteDataField[]
-        functions: {
-            [key: string]: [string]
-        }
-    }
     darkMode: boolean
-    inlineIssueUrlToTag: boolean
-    inlineIssuePrefix: string
 }
 
 const DEFAULT_SETTINGS: IJiraIssueSettings = {
@@ -45,25 +30,16 @@ const DEFAULT_SETTINGS: IJiraIssueSettings = {
     apiBasePath: '/rest/api/latest',
     password: '********',
     cacheTime: '15m',
-    searchResultsLimit: 10,
     statusColorCache: {},
-    customFieldsIdToName: {},
-    customFieldsNameToId: {},
     darkMode: false,
-    inlineIssueUrlToTag: true,
-    inlineIssuePrefix: 'JIRA:',
-    jqlAutocomplete: {
-        fields: [],
-        functions: {},
-    },
 }
 
 export class JiraIssueSettingsTab extends PluginSettingTab {
-    private _plugin: JiraIssuePlugin
+    private _plugin: JiraGraphPlugin
     private _data: IJiraIssueSettings = DEFAULT_SETTINGS
     private _onChangeListener: (() => void) | null = null
 
-    constructor(app: App, plugin: JiraIssuePlugin) {
+    constructor(app: App, plugin: JiraGraphPlugin) {
         super(app, plugin)
         this._plugin = plugin
     }
@@ -154,16 +130,6 @@ export class JiraIssueSettingsTab extends PluginSettingTab {
 
         containerEl.createEl('h2', { text: 'Rendering' })
         new Setting(containerEl)
-            .setName('Default search results limit')
-            .setDesc('Maximum number of search results to retrieve when using jira-search without specifying a limit.')
-            .addText(text => text
-                // .setPlaceholder('Insert a number')
-                .setValue(this._data.searchResultsLimit.toString())
-                .onChange(async value => {
-                    this._data.searchResultsLimit = parseInt(value) || DEFAULT_SETTINGS.searchResultsLimit
-                    await this.saveSettings()
-                }))
-        new Setting(containerEl)
             .setName('Dark mode')
             // .setDesc('')
             .addToggle(toggle => toggle
@@ -172,27 +138,6 @@ export class JiraIssueSettingsTab extends PluginSettingTab {
                     this._data.darkMode = value
                     await this.saveSettings()
                 }))
-
-        new Setting(containerEl)
-            .setName('Issue url to tags')
-            .setDesc(`Convert links to issues to tags. Example: ${this._data.host}/browse/AAA-123`)
-            .addToggle(toggle => toggle
-                .setValue(this._data.inlineIssueUrlToTag)
-                .onChange(async value => {
-                    this._data.inlineIssueUrlToTag = value
-                    await this.saveSettings()
-                }))
-
-        new Setting(containerEl)
-            .setName('Inline issue prefix')
-            .setDesc(`Prefix to use when rendering inline issues. Keep this field empty to disable this feature. Example: ${this._data.inlineIssuePrefix}AAA-123`)
-            .addText(text => text
-                .setValue(this._data.inlineIssuePrefix)
-                .onChange(async value => {
-                    this._data.inlineIssuePrefix = value
-                    await this.saveSettings()
-                }))
-
 
 
         containerEl.createEl('h2', { text: 'Search columns' })

@@ -1,5 +1,5 @@
 import { Platform, requestUrl, RequestUrlParam, RequestUrlResponse } from 'obsidian'
-import { IJiraAutocompleteData, IJiraAutocompleteField, IJiraField, IJiraIssue, IJiraSearchResults } from './jiraInterfaces'
+import { IJiraIssue, IJiraSearchResults } from './jiraInterfaces'
 import { EAuthenticationTypes, IJiraIssueSettings } from "../settings"
 
 export class JiraClient {
@@ -91,53 +91,5 @@ export class JiraClient {
             }
         )
         this._settings.statusColorCache[status] = response.statusCategory.colorName
-    }
-
-    async updateCustomFieldsCache(): Promise<void> {
-        const response: IJiraField[] = await this.sendRequest(
-            {
-                url: this.buildUrl(`/field`),
-                method: 'GET',
-                headers: this.buildHeaders(),
-            }
-        )
-        this._settings.customFieldsIdToName = {}
-        for (const field of response) {
-            if (field.custom && field.schema && field.schema.customId) {
-                this._settings.customFieldsIdToName[field.schema.customId] = field.name
-                this._settings.customFieldsNameToId[field.name] = field.schema.customId.toString()
-            }
-        }
-    }
-
-    async updateJQLAutoCompleteCache(): Promise<void> {
-        const response: IJiraAutocompleteData = await this.sendRequest(
-            {
-                url: this.buildUrl(`/jql/autocompletedata`),
-                method: 'GET',
-                headers: this.buildHeaders(),
-            }
-        )
-        this._settings.jqlAutocomplete.functions = {}
-        for (const functionData of response.visibleFunctionNames) {
-            for (const functionType of functionData.types) {
-                this._settings.jqlAutocomplete.functions[functionType].push(functionData.value)
-            }
-        }
-        this._settings.jqlAutocomplete.fields = response.visibleFieldNames
-    }
-
-    async getJQLAutoCompleteField(fieldName: string, fieldValue: string): Promise<IJiraAutocompleteField> {
-        const queryParameters = new URLSearchParams({
-            fieldName: fieldName,
-            fieldValue: fieldValue,
-        })
-        return await this.sendRequest(
-            {
-                url: this.buildUrl(`/jql/autocompletedata/suggestions`, queryParameters),
-                method: 'GET',
-                headers: this.buildHeaders(),
-            }
-        )
     }
 }

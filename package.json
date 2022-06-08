@@ -2,7 +2,7 @@
 	"name": "obsidian-jira-graph",
 	"version": "1.0.1",
 	"description": "This plugin allows you to visualize the Atlassian Jira issues dependencies from your Obsidian notes.",
-	"main": "main.js",
+	"main": "src/main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
@@ -25,5 +25,9 @@
 		"obsidian": "latest",
 		"tslib": "2.3.1",
 		"typescript": "4.4.4"
+	},
+	"dependencies": {
+		"moment": "^2.29.3",
+		"ms": "^2.1.3"
 	}
 }

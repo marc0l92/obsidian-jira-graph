@@ -1,4 +1,4 @@
-import { Notice, Plugin } from 'obsidian'
+import { Plugin } from 'obsidian'
 import { JiraClient } from './client/jiraClient'
 import { ObjectsCache } from './objectsCache'
 import { JiraIssueSettingsTab as JiraGraphSettingsTab } from './settings'
@@ -22,14 +22,14 @@ export default class JiraGraphPlugin extends Plugin {
         })
 
         // Commands
-        this.addCommand({
-            id: 'obsidian-jira-graph-clear-cache',
-            name: 'Clear cache',
-            callback: () => {
-                this._cache.clear()
-                new Notice('JiraGraph: Cache cleaned')
-            }
-        })
+        // this.addCommand({
+        //     id: 'obsidian-jira-graph-clear-cache',
+        //     name: 'Clear cache',
+        //     callback: () => {
+        //         this._cache.clear()
+        //         new Notice('JiraGraph: Cache cleaned')
+        //     }
+        // })
         this.addCommand({
             id: 'obsidian-jira-graph-create',
             name: 'Create graph',
